@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  mariadb:
+    image: mariadb:10.8.3
+    container_name: mariadb
+    ports:
+      - 3306:3306
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+    restart: always
+    networks:
+      - mariadb_network
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    container_name: phpmyadmin
+    ports:
+      - 3380:80
+    depends_on:
+      - mariadb
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+      - PMA_ARBITRARY=1
+      - PMA_USER=root
+      - PMA_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    restart: always
+    networks:
+      - mariadb_network
+networks:
+  mariadb_network:
+    driver: bridge
+volumes:
+  db_data:
+    driver: local
