@@ -28,6 +28,6 @@ If the password for the database is stored in a _.env_ file the following comman
 
 Where:
 * _container_ is the name of the container with the MariaDB instance. 
-* _${PASSWORD} is an environment variable from the _.env_ file.
+* _${PASSWORD}_ is an environment variable from the _.env_ file.
 * _database_ is the name of the database to be exported.
 
