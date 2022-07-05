@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  mediawiki:
+    image: mediawiki:1.38.2
+    container_name: mediawiki
+    ports:
+      - "8080:80"
+    volumes:
+      - mediawiki_images:/var/www/html/images
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+    networks:
+      - mediawiki_network
+    restart: always
+    depends_on:
+      - mariadb
+  mariadb:
+    image: mariadb:10.8.3
+    container_name: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+    networks:
+      - mediawiki_network
+    restart: always
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    container_name: phpmyadmin
+    ports:
+      - "3380:80"
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+      - PMA_ARBITRARY=1
+      - PMA_USER=root
+      - PMA_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    networks:
+      - mediawiki_network
+    restart: always
+    depends_on:
+      - mariadb
+networks:
+  mediawiki_network:
+    driver: bridge
+volumes:
+  mariadb_data:
+    driver: local
+  mediawiki_images:
+    driver: local
