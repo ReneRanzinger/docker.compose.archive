@@ -20,3 +20,13 @@ Environment variables that need to be configured in the shell or using the [.env
 
 ## Volumes
 PostGreSQL database folder and PGAdmin folder are persistent in volumes. The files can be found in _/var/lib/docker/volumes/_ on a Linux system.
+
+## Creating a database dump
+Use the following command:
+
+`docker-compose exec <container> pg_dump --username=<user> -d <database> > dump.sql`
+
+Where:
+* _database_ is the name of the database to be exported.
+* _user_ is the name of the database user (e.g. postgres)
+* _container_ name of the PostGreSQL container
